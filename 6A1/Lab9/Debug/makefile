@@ -11,14 +11,14 @@ GEN_CMDS__FLAG :=
 
 ORDERED_OBJS += \
 "./Timer.obj" \
-"./lab7-interrupt_template.obj" \
-"./lab9-interrupt_template2.obj" \
+"./adc.obj" \
+"./lab9_template.obj" \
 "./lcd.obj" \
 "./movement.obj" \
 "./open_interface.obj" \
+"./ping_template.obj" \
 "./tm4c123gh6pm_startup_ccs.obj" \
 "./uart-interrupt.obj" \
-"../libcybotScan.lib" \
 "../tm4c123gh6pm.cmd" \
 $(GEN_CMDS__FLAG) \
 -llibc.a \
@@ -129,29 +129,29 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXE_OUTPUTS += \
-Lab15.out \
+Lab9.out \
 
 EXE_OUTPUTS__QUOTED += \
-"Lab15.out" \
+"Lab9.out" \
 
 
 # All Target
-all: $(OBJS) $(CMD_SRCS) $(LIB_SRCS) $(GEN_CMDS)
-	@$(MAKE) --no-print-directory -Onone "Lab15.out"
+all: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
+	@$(MAKE) --no-print-directory -Onone "Lab9.out"
 
 # Tool invocations
-Lab15.out: $(OBJS) $(CMD_SRCS) $(LIB_SRCS) $(GEN_CMDS)
+Lab9.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: Arm Linker'
-	"C:/ti/ccs1230/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --define=ccs="ccs" --define=PART_TM4C123GH6PM -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"Lab15.map" --heap_size=4096 --stack_size=4096 -i"C:/ti/ccs1230/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/lib" -i"C:/ti/ccs1230/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="Lab15_linkInfo.xml" --rom_model -o "Lab15.out" $(ORDERED_OBJS)
+	"C:/ti/ccs1230/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --define=ccs="ccs" --define=PART_TM4C123GH6PM -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"Lab9.map" --heap_size=4096 --stack_size=4096 -i"C:/ti/ccs1230/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/lib" -i"C:/ti/ccs1230/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="Lab9_linkInfo.xml" --rom_model -o "Lab9.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
 # Other Targets
 clean:
 	-$(RM) $(EXE_OUTPUTS__QUOTED)
-	-$(RM) "Timer.obj" "lab7-interrupt_template.obj" "lab9-interrupt_template2.obj" "lcd.obj" "movement.obj" "open_interface.obj" "tm4c123gh6pm_startup_ccs.obj" "uart-interrupt.obj" 
-	-$(RM) "Timer.d" "lab7-interrupt_template.d" "lab9-interrupt_template2.d" "lcd.d" "movement.d" "open_interface.d" "tm4c123gh6pm_startup_ccs.d" "uart-interrupt.d" 
+	-$(RM) "Timer.obj" "adc.obj" "lab9_template.obj" "lcd.obj" "movement.obj" "open_interface.obj" "ping_template.obj" "tm4c123gh6pm_startup_ccs.obj" "uart-interrupt.obj" 
+	-$(RM) "Timer.d" "adc.d" "lab9_template.d" "lcd.d" "movement.d" "open_interface.d" "ping_template.d" "tm4c123gh6pm_startup_ccs.d" "uart-interrupt.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

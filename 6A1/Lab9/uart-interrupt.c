@@ -16,35 +16,33 @@
 #include "uart-interrupt.h"
 
 // These variables are declared as examples for your use in the interrupt handler.
-volatile char command_byte = 's'; // byte value for special character used as a command
+volatile char command_byte = -1; // byte value for special character used as a command
 volatile int command_flag = 0; // flag to tell the main program a special command was received
-volatile char start_byte = 'g';
-volatile int start_flag = 0;
 
 void uart_interrupt_init(void){
     //TODO
   //enable clock to GPIO port B
-  SYSCTL_RCGCGPIO_R |= 0b10;
+  SYSCTL_RCGCGPIO_R |= 0x02;
 
   //enable clock to UART1
-  SYSCTL_RCGCUART_R |= 0x2;
+  SYSCTL_RCGCUART_R |= 0x02;
 
   //wait for GPIOB and UART1 peripherals to be ready
-  while ((SYSCTL_PRGPIO_R & 0b10) == 0) {};
-  while ((SYSCTL_PRUART_R & 0x2) == 0) {};
+  while ((SYSCTL_PRGPIO_R & 0x02) == 0) {};
+  while ((SYSCTL_PRUART_R & 0x02) == 0) {};
 
   //enable digital functionality on port B pins
-  GPIO_PORTB_DEN_R |= 0x3;
+  GPIO_PORTB_DEN_R |= 0x03;
 
   //enable alternate functions on port B pins
-  GPIO_PORTB_AFSEL_R |= 0x3;
+  GPIO_PORTB_AFSEL_R |= 0x03;
 
   //enable UART1 Rx and Tx on port B pins
-  GPIO_PORTB_PCTL_R = 0x00000011;
+  GPIO_PORTB_PCTL_R = 0x011;
 
   //calculate baud rate
-  uint16_t iBRD = 0x8; //use equations
-  uint16_t fBRD = 0x2C; //use equations
+  uint16_t iBRD = 8.6806; //use equations
+  uint16_t fBRD = 44; //use equations
 
   //turn off UART1 while setting it up
   UART1_CTL_R &= 0x1;
@@ -67,7 +65,7 @@ void uart_interrupt_init(void){
   //////Enable interrupts
 
   //first clear RX interrupt flag (clear by writing 1 to ICR)
-  UART1_ICR_R |= 0x10;
+  UART1_ICR_R |= 0b00010000;
 
   //enable RX raw interrupts in interrupt mask register
   UART1_IM_R |= 0x10;
@@ -76,7 +74,7 @@ void uart_interrupt_init(void){
   NVIC_PRI1_R = (NVIC_PRI1_R & 0xFF0FFFFF) | 0x00200000;
 
   //NVIC setup: enable interrupt for UART1, IRQ #6, set bit 6
-  NVIC_EN0_R |= 0b1000000;
+  NVIC_EN0_R |= 0x40;
 
   //tell CPU to use ISR handler for UART1 (see interrupt.h file)
   //from system header file: #define INT_UART1 22
@@ -91,24 +89,34 @@ void uart_interrupt_init(void){
   //Good to be explicit in your code
   //Be careful to not clear RX and TX enable bits
   //(either preserve if already set or set them)
-  UART1_CTL_R |= 0b0001100000001;
+  UART1_CTL_R = 0x301;
 
 }
 
 void uart_sendChar(char data){
-      while((UART1_FR_R & 0x20) != 0);
-      UART1_DR_R = data;
+    while((UART1_FR_R & 0x20) != 0);
+       UART1_DR_R = data;
+
 }
 
-//char uart_receive(void){
-//  //DO NOT USE this busy-wait function if using RX interrupt
-//}
+char uart_receive_nonblocking(void){
+    //DO NOT USE this busy-wait function if using RX interrupt
+    uint32_t ret;
+//        char rdata;
+//
+//        if((UART1_FR_R & UART1_FR_RXFE) == 0){
+//            ret = UART1_DR_R;
+//        if(ret & 0xF00) {GPIO_PORTB_DATA_R = 0xF;}
+//        else{rdata = (char)(UART1_DR_R & 0xFF); }
+//        return rdata;
+//        }
+}
 
 void uart_sendStr(const char *data){
-    int i;
-        for(i = 0; i < strlen(data); i++) {
-            uart_sendChar(data[i]);
-        }
+    while(*data != '\0') {
+        uart_sendChar(*data);
+        data++;
+     }
 }
 
 // Interrupt handler for receive interrupts
@@ -120,12 +128,12 @@ void UART1_Handler(void)
     {
         //byte was received in the UART data register
         //clear the RX trigger flag (clear by writing 1 to ICR)
-        UART1_ICR_R |= 0x10;
+        UART1_ICR_R |= 0b00010000;
 
         //read the byte received from UART1_DR_R and echo it back to PuTTY
         //ignore the error bits in UART1_DR_R
-        byte_received = 0b00010000;
-        uart_sendChar(UART1_DR_R);
+        byte_received = UART1_DR_R;
+        uart_sendChar(byte_received);
 
         //if byte received is a carriage return
         if (byte_received == '\r')
@@ -133,24 +141,19 @@ void UART1_Handler(void)
             //send a newline character back to PuTTY
             uart_sendChar('\n');
         }
-        else
+        else if(byte_received == 's')
         {
+           uart_sendChar('s');
+        }
             //AS NEEDED
             //code to handle any other special characters
             //code to update global shared variables
             //DO NOT PUT TIME-CONSUMING CODE IN AN ISR
-
-            if (UART1_DR_R == command_byte)
+        else {
+            if (byte_received == command_flag)
             {
-              command_flag = 1;
-              uart_sendChar('\n');
-              uart_sendChar('\r');
-            }
-            if (UART1_DR_R == start_byte)
-                       {
-                         start_flag = 1;
 
-                       }
+            }
         }
     }
 }

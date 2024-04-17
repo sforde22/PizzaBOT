@@ -20,9 +20,8 @@ lab7-interrupt_template.obj: C:/ti/ccs1230/ccs/tools/compiler/ti-cgt-arm_20.2.7.
 lab7-interrupt_template.obj: C:/ti/ccs1230/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdarg.h
 lab7-interrupt_template.obj: C:/ti/ccs1230/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/string.h
 lab7-interrupt_template.obj: C:/ti/ccs1230/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/xlocale/_string.h
-lab7-interrupt_template.obj: ../uart-interrupt.h
 lab7-interrupt_template.obj: ../cyBot_Scan.h
-lab7-interrupt_template.obj: C:/ti/ccs1230/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdlib.h
+lab7-interrupt_template.obj: ../uart-interrupt.h
 lab7-interrupt_template.obj: ../movement.h
 lab7-interrupt_template.obj: ../open_interface.h
 lab7-interrupt_template.obj: C:/ti/ccs1230/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdlib.h
@@ -70,11 +69,9 @@ C:/ti/ccs1230/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/string.h:
 
 C:/ti/ccs1230/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/xlocale/_string.h:
 
-../uart-interrupt.h:
-
 ../cyBot_Scan.h:
 
-C:/ti/ccs1230/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdlib.h:
+../uart-interrupt.h:
 
 ../movement.h:
 

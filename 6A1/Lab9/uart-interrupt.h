@@ -31,7 +31,6 @@
 //extern volatile int receive_index; // index to keep track of characters in buffer
 extern volatile char command_byte; // byte value for special character used as a command
 extern volatile int command_flag; // flag to tell the main program a special command was received
-extern volatile int start_flag;
 
 // UART1 device initialization for CyBot to PuTTY
 void uart_interrupt_init(void);
