@@ -21,7 +21,9 @@ LIST OF ALL FEATURES:
   - Potholes - different colored strips
   - Vechicles - Other cyBots
   - Pedestrians - Skinny Tubes
-  - Delivery - Big Tube
+  - Delivery Zone - Red Colored Tape
+  - Boundary/Construction Zone - Purple Colored Tape
+  - Streets - White Tape
   - Buildings - Cardboard or Tape??
 
   puTTY
