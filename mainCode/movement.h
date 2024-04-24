@@ -11,12 +11,16 @@
 #include <open_interface.h>
 #include <lcd.h>
 
+double uTurn(oi_t *sensor);
 double move_blockForward(oi_t *sensor_data);
 double move_blockLeft(oi_t *sensor_data);
 double move_blockRight(oi_t *sensor_data);
+double move_intersection(oi_t *sensor_data);
+
+
+
 double turn_right(oi_t *sensor, double degrees);
 double turn_left(oi_t *sensor, double degrees);
-double uturn(oi_t *sensor, double degrees);
 
 
 //double move_forward (oi_t *sensor_data, double distance_mm);

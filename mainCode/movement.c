@@ -11,7 +11,7 @@
 #include "uart-interrupt.h"
 #include "cyBot_Scan.h"
 
-double block_length = 500.0;
+double block_length = 590.0;
 
 
 //Moves 1 block forward
@@ -19,7 +19,7 @@ double block_length = 500.0;
 double move_blockForward(oi_t *sensor_data)
 {
     double block = 0; // distance member in oi_t struct is type double
-    oi_setWheels(200,200); //move forward at full speed
+    oi_setWheels(100,100); //move forward at full speed
 
            while (block < block_length) {
                oi_update(sensor_data);
@@ -28,18 +28,39 @@ double move_blockForward(oi_t *sensor_data)
                char buf[128];
                sprintf(buf, "%f", block);
 
-               lcd_printf(buf);
+               lcd_printf("Speed: 25 MPH");
 
 
            }
+
+     oi_setWheels(0,0);
      return 0;
 }
 
+double move_intersection(oi_t *sensor_data){
 
-//Moves 1 block left
-// Moves into intersection and turns
-//called when the interrupt is triggered
-double move_blockLeft(oi_t *sensor_data)
+    double block = 0; // distance member in oi_t struct is type double
+        oi_setWheels(50,50); //move forward at full speed
+
+               while (block < 150) {
+                   oi_update(sensor_data);
+                   block += sensor_data -> distance; // use -> notation since pointer
+
+                   char buf[128];
+                   sprintf(buf, "%f", block);
+
+                   lcd_printf("Speed: 25 MPH");
+
+
+               }
+
+         oi_setWheels(0,0);
+         return 0;
+
+}
+
+
+double move_uTurn(oi_t *sensor_data)
 {
     double block = 0; // distance member in oi_t struct is type double
     oi_setWheels(200,200); //move forward at full speed
@@ -59,35 +80,10 @@ double move_blockLeft(oi_t *sensor_data)
 }
 
 
-//Moves 1 block Right
-// Moves into intersection and turns
-//called when the interrupt is triggered
-double move_blockRight(oi_t *sensor_data)
-{
-    double block = 0; // distance member in oi_t struct is type double
-    oi_setWheels(200,200); //move forward at full speed
-
-           while (block < block_length) {
-               oi_update(sensor_data);
-               block += sensor_data -> distance; // use -> notation since pointer
-
-               char buf[128];
-               sprintf(buf, "%f", block);
-
-               lcd_printf(buf);
-
-
-           }
-     return 0;
-}
-
-
-//This is the function for turning when cyBot
-//is in the middle of the intersection
 double turn_right(oi_t *sensor, double degrees)
 {
     double sum = 90;
-    oi_setWheels(0,500);
+    oi_setWheels(-5,40);
 
     while(sum > 10)
     {
@@ -101,16 +97,13 @@ double turn_right(oi_t *sensor, double degrees)
     return 0;
 }
 
-
-//This is the function for turning when cyBot
-//is in the middle of the intersection
 double turn_left(oi_t *sensor, double degrees)
 {
 
     double sum = 0;
-        oi_setWheels(500,0);
+        oi_setWheels(40,-5);
 
-        while(sum < 80)
+        while(sum < degrees)
         {
             oi_update(sensor);
             sum += sensor->angle;
@@ -121,6 +114,43 @@ double turn_left(oi_t *sensor, double degrees)
 
         return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//This is the function for turning when cyBot
+//is in the middle of the intersection
+
+
+//This is the function for turning when cyBot
+//is in the middle of the intersection
 
 double uturn(oi_t *sensor, double degrees)
 {
