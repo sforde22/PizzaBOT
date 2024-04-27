@@ -16,6 +16,7 @@
 #include "servo.h"
 #include "adc.h"
 #include "ping.h"
+#include "cliff.h"
 //#include "cyBot_Scan.h"
 
 unsigned char horn = 'a';
@@ -37,7 +38,7 @@ int main (void) {
     oi_t *sensor_data = oi_alloc(); // do this only once at start of main()
     oi_init(sensor_data); // do this only once at start of main()
 
- oi_free(sensor_data);
+// oi_free(sensor_data);
     innit();
 
     int madeToDelivery = 1;
@@ -51,8 +52,10 @@ int main (void) {
 
         if(Instructions == 't') //forward
         {
+            uart_sendChar('\n');
+            uart_sendChar('\r');
             move_blockForward(sensor_data);
-            scan_intersection(objectsDetected);
+           // scan_intersection(objectsDetected);
             uart_sendStr(objectsDetected);
         }
         else if(Instructions == 'f') // left
@@ -170,7 +173,7 @@ void scan_intersection(char objDirection[])
     {
         servo_move(i);
         adc_distance = adc_dist();
-//        ping_distance = ping_getDistance();
+        ping_distance = ping_getDistance();
 
         if(adc_distance < 12.5763) // || ping_distance < 50.0
         {
@@ -191,6 +194,8 @@ void scan_intersection(char objDirection[])
             }
         }
     }
+    timer_waitMillis(200);
+    servo_move(0);
 }
 
 void innit()

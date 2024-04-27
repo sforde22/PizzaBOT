@@ -10,18 +10,67 @@
 #include <string.h>
 #include "uart-interrupt.h"
 #include "cyBot_Scan.h"
+#include "cliff.h"
 
 double block_length = 590.0;
 
+Color* left;
+Color* fleft;
+Color* right;
+Color* fright;
+Color* cliffSensor;
+const char* cliffState;
+
+
+void cliff_print(){
+
+    cliff_detect(left, fleft,fright,right);
+        if(left == WHITE || left == BLACK) {
+            cliffSensor = left;
+            char color[15];
+            sprintf(color, "Left: %s ", getCliffState(cliffSensor));
+            uart_sendStr(color);
+            free(cliffSensor);
+                   }
+
+
+            if(fleft == WHITE || fleft == BLACK) {
+                        cliffSensor = fleft;
+                        char color[15];
+                        sprintf(color, "fLeft: %s ", getCliffState(cliffSensor));
+                        uart_sendStr(color);
+                        free(cliffSensor);
+                    }
+
+        if(fright == WHITE || fright == BLACK) {
+            cliffSensor = fright;
+            char color[15];
+            sprintf(color, "fright: %s ", getCliffState(cliffSensor));
+            uart_sendStr(color);
+            free(cliffSensor);
+        }
+        if(right == WHITE || right == BLACK) {
+            cliffSensor = right;
+            char color[15];
+            sprintf(color, "right: %s ", getCliffState(cliffSensor));
+            uart_sendStr(color);
+            free(cliffSensor);
+        }
+
+
+}
 
 //Moves 1 block forward
 //called when the interrupt is triggered
 double move_blockForward(oi_t *sensor_data)
 {
+    cliff_print();
     double block = 0; // distance member in oi_t struct is type double
     oi_setWheels(100,100); //move forward at full speed
 
            while (block < block_length) {
+
+
                oi_update(sensor_data);
                block += sensor_data -> distance; // use -> notation since pointer
 
